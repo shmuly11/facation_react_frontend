@@ -1,7 +1,8 @@
-import React from 'react'
+import React, {useState} from 'react'
 
 
-function UploadPhoto({setPhoto}) {
+function UploadPhoto({setPhoto, photo}) {
+    const [loading, setLoading] = useState(false)
     let myWidget = window.cloudinary.createUploadWidget({
       cloudName: process.env.REACT_APP_CLOUDINARY_CLOUD_NAME, uploadPreset: 'o1dsquje', cropping: false},
       (error, result) => { handleUpload(error, result) })
@@ -17,6 +18,7 @@ function UploadPhoto({setPhoto}) {
     }
 
     function removeBackground(url){
+        setLoading(true)
         fetch("https://background-removal.p.rapidapi.com/remove", {
 	    "method": "POST",
 	    "headers": {
@@ -27,11 +29,16 @@ function UploadPhoto({setPhoto}) {
 	    "body":`image_url=${url}` 
         })
         .then(res=> res.json())
-        .then( data => setPhoto(data.response.image_url))
+        .then( data => {
+            setLoading(false)
+            setPhoto(data.response.image_url)
+        })
     }
     return (
       <div >
         <button onClick={openWidget}>upload</button>
+        {loading && <h3>Loading...</h3>}
+        {photo && <img src={photo} alt="profile"/>}
       </div>
     );
   }

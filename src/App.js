@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import UploadPhoto from './UploadPhoto'
 import './App.css';
-// import { WidgetLoader, Widget } from 'react-cloudinary-upload-widget'
+
 
 function App() {
   
